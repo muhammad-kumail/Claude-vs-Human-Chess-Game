@@ -1,12 +1,13 @@
-# Claude-vs-Human-Chess-Game
+# Chess vs Claude (React + Vite)
 
-A fully playable, browser-based chess game where you challenge **Claude AI** in a one-on-one match — no installs, no backend, runs entirely in your browser.
+A fully playable, browser-based chess game where you challenge **Claude** (the built-in minimax engine) in a one-on-one match. The app runs entirely in the browser—no backend.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Project structure](#project-structure)
 - [Features](#features)
 - [How to Play](#how-to-play)
 - [Game Setup Flow](#game-setup-flow)
@@ -26,65 +27,88 @@ A fully playable, browser-based chess game where you challenge **Claude AI** in 
 
 ## Overview
 
-This is a single-file HTML chess game built with vanilla JavaScript. It includes:
-
-- Full chess rule enforcement (all pieces, all special moves)
-- A Claude-powered AI opponent using Minimax with Alpha-Beta pruning
+- Full chess rule enforcement (all pieces, castling, en passant, promotion)
+- AI opponent using **Minimax with Alpha-Beta pruning** (depth 3)
 - Dual chess timers (bullet, blitz, rapid)
-- Move-from/to square highlighting
-- PGN export with proper algebraic notation
-- Strict check, double check, checkmate and stalemate detection
-- Board flip depending on which color you choose
+- Move-from/to square highlighting and legal-move hints
+- PGN export with algebraic notation
+- Check, checkmate, and stalemate detection
+- Board flip when you play Black
+
+---
+
+## Project structure
+
+```
+src/
+├── App.jsx
+├── main.jsx
+├── index.css
+├── engine/           # Pure chess logic (no React)
+│   ├── constants.js
+│   ├── utils.js
+│   ├── moves.js
+│   ├── rules.js
+│   ├── ai.js
+│   └── san.js
+├── hooks/
+│   └── useChessGame.js
+└── components/
+    ├── Board/
+    ├── PlayerBar/
+    ├── StatusBar/
+    └── Modals/
+```
 
 ---
 
 ## Features
 
-| Feature                   | Details                                                     |
-| ------------------------- | ----------------------------------------------------------- |
-| All 6 piece types         | Pawn, Knight, Bishop, Rook, Queen, King                     |
-| Full legal move filtering | No move can leave your own king in check                    |
-| Check detection           | Single check, double check, checkmate, stalemate            |
-| Special moves             | Castling (K & Q side), En passant, Pawn promotion           |
-| Chess clock               | 1 min / 3 min / 5 min / 10 min per player                   |
-| Move highlight            | From-square and to-square glow after every move             |
-| AI opponent               | Minimax depth-3 with Alpha-Beta pruning + positional tables |
-| Board flip                | Board always shown from your perspective                    |
-| PGN export                | Full PGN with headers, disambiguation, +/# symbols          |
-| Promotion UI              | Visual piece-picker modal on pawn promotion                 |
+| Feature                   | Details                                                      |
+| ------------------------- | ------------------------------------------------------------ |
+| All 6 piece types         | Pawn, Knight, Bishop, Rook, Queen, King                      |
+| Full legal move filtering | No move can leave your own king in check                     |
+| Check detection           | Check, checkmate, stalemate                                  |
+| Special moves             | Castling (K & Q side), En passant, Pawn promotion            |
+| Chess clock               | 1 min / 3 min / 5 min / 10 min per player                    |
+| Move highlight            | From-square and to-square glow after every move              |
+| AI opponent               | Minimax depth-3 with Alpha-Beta pruning + positional tables  |
+| Board flip                | Board always shown from your perspective                     |
+| PGN export                | Headers, SAN, disambiguation, `+` / `#`, castling, promotion |
+| Promotion UI              | Modal to choose Queen, Rook, Bishop, or Knight               |
 
 ---
 
 ## How to Play
 
-1. Open the HTML file in any modern browser
-2. A **time control modal** appears — pick your preferred time limit
-3. A **side selection modal** appears — choose to play as White or Black
-4. The board sets up with **Claude always at the top** and **you always at the bottom**
-5. If you picked **White**, you move first. If you picked **Black**, Claude moves first automatically
-6. Click any of your pieces to see its legal moves highlighted
-7. Click a highlighted square to make the move
-8. The clock for the active player starts ticking from your very first move
-9. Play until checkmate, stalemate, or a player runs out of time
-10. After the game ends, click **📄 PGN** to view and copy the full game notation
+1. Install dependencies and start the dev server (see [Running Locally](#running-locally))
+2. A **time control** modal appears — pick your preferred time limit
+3. A **side selection** modal appears — choose White or Black
+4. The board shows **Claude at the top** and **you at the bottom**
+5. If you picked **White**, you move first. If **Black**, Claude moves first
+6. Click one of your pieces to see legal moves highlighted
+7. Click a highlighted square to move
+8. The active player’s clock starts after the **first move** of the game
+9. Play until checkmate, stalemate, or time runs out
+10. After the game ends, use **PGN** to view and copy the game notation
 
 ---
 
 ## Game Setup Flow
 
 ```
-Open Game
+Start app
     │
     ▼
 ┌─────────────────────┐
-│  Choose Time Control │
-│  1min / 3min /       │
-│  5min / 10min        │
+│  Choose Time Control│
+│  1min / 3min /      │
+│  5min / 10min       │
 └────────┬────────────┘
          │
          ▼
 ┌─────────────────────┐
-│  Choose Your Side    │
+│  Choose Your Side   │
 │  ♙ White (go first) │
 │  ♟ Black (Claude    │
 │         goes first) │
@@ -100,10 +124,10 @@ Open Game
 
 The board is **always shown from your perspective**:
 
-- **You play White** → standard orientation, your pieces at the bottom (rank 1), files a→h left to right
-- **You play Black** → board is flipped, your pieces still at the bottom (rank 8), files h→a left to right
+- **You play White** → standard orientation: your pieces at the bottom (rank 1), files a→h left to right
+- **You play Black** → board is flipped: your pieces at the bottom (rank 8), files h→a left to right
 
-Claude is always shown at the top of the screen regardless of color.
+Claude stays at the top of the screen regardless of color.
 
 ---
 
@@ -111,80 +135,67 @@ Claude is always shown at the top of the screen regardless of color.
 
 ### Pawn
 
-- Moves one square forward; two squares from starting rank
-- Captures diagonally
-- En passant capture
-- Promotes on reaching the 8th rank (choose Queen, Rook, Bishop, or Knight)
+- One square forward; two from the starting rank
+- Diagonal captures
+- En passant
+- Promotion on the last rank (Queen, Rook, Bishop, or Knight)
 
 ### Knight
 
-- L-shaped jump: two squares in one direction, one in another
-- The only piece that leaps over other pieces
-- 8 possible landing squares from any central position
+- L-shaped jump; can leap over pieces
 
 ### Bishop
 
-- Slides diagonally any number of squares
-- Blocked by pieces in its path
+- Diagonal slides; blocked by pieces in the path
 
 ### Rook
 
-- Slides horizontally or vertically any number of squares
-- Blocked by pieces in its path
-- Participates in castling
+- Horizontal/vertical slides; blocked; used in castling
 
 ### Queen
 
-- Combines Rook and Bishop movement
-- Most powerful piece
+- Combines rook and bishop movement
 
 ### King
 
-- Moves one square in any direction
-- Cannot move into a square attacked by an opponent
-- Castling (kingside and queenside) with strict conditions
+- One square in any direction
+- Cannot move into check
+- Castling (kingside and queenside) with standard conditions
 
 ---
 
 ## Check, Double Check & Checkmate
 
-### Single Check
+### Single check
 
-When one enemy piece threatens your king, you must resolve it by one of three methods:
+Resolve check by moving the king, capturing the attacker, or (for sliding attackers) blocking the line.
 
-1. **Move the king** to a safe square
-2. **Capture** the attacking piece
-3. **Block** the line of attack (only works for sliding pieces — rooks, bishops, queens; not knights)
+> Every legal move is filtered so your king never ends in check.
 
-> No piece may make a move that leaves your king in check — this is enforced on every candidate move via board simulation.
+### Double check
 
-### Double Check
-
-When two pieces simultaneously give check (only possible via a discovered check), **only the king can move**. Blocking or capturing is impossible because you cannot resolve two attacks in a single move.
+When two pieces give check (typically discovered check), **only the king can move**.
 
 ### Checkmate
 
-When the king is in check and there are zero legal moves for any piece — checkmate. The game ends immediately.
+King is in check and there are no legal moves.
 
 ### Stalemate
 
-When it is your turn, your king is **not** in check, but you have no legal moves at all — stalemate. The game is a draw.
+King is not in check but there are no legal moves — draw.
 
 ---
 
 ## Chess Clock
 
-Each player gets the same starting time. The clock works as follows:
-
 | Event             | Behavior                                  |
 | ----------------- | ----------------------------------------- |
-| Game start        | Clock does NOT start yet                  |
-| First move made   | Clock starts for the opponent             |
+| Game start        | Clock does not run until the first move   |
 | After each move   | Active clock switches to the other player |
-| ≤ 10 seconds left | Timer box flashes red                     |
+| ≤ 10 seconds left | Player bar shows a low-time style         |
 | Time reaches 0    | That player loses on time                 |
 
-### Time Controls
+### Time controls
 
 | Label  | Time per player |
 | ------ | --------------- |
@@ -197,87 +208,65 @@ Each player gets the same starting time. The clock works as follows:
 
 ## Move Highlighting
 
-After every move (by you or Claude), both the **origin square** and the **destination square** are highlighted with a semi-transparent golden colour. This lets both players instantly see what just moved and where.
-
-Additionally:
-
-- **Legal move dots** appear on empty squares a selected piece can move to
-- **Capture rings** appear on enemy squares a selected piece can capture
-- **Blue outline** shows the currently selected piece
-- **Red square** highlights the king when it is in check
+- **From / to** squares highlighted after each move
+- **Dots** on empty squares for quiet moves
+- **Rings** on squares where a capture (including en passant) is possible
+- **Outline** on the selected piece
+- **Red** highlight on the king when in check
 
 ---
 
 ## Claude AI Engine
 
-Claude uses the **Minimax algorithm with Alpha-Beta pruning** at depth 3.
+**Minimax + Alpha-Beta pruning**, search depth **3**.
 
 ### Evaluation
 
-Each position is scored using:
-
-- **Material value** — each piece type has a fixed point value
-  - Pawn: 100 | Knight: 320 | Bishop: 330 | Rook: 500 | Queen: 900 | King: 20,000
-- **Positional tables (PST)** — each piece has an 8×8 bonus table that rewards good square placement:
-  - Pawns are rewarded for advancing toward promotion
-  - Knights are rewarded for central squares
-  - Bishops are rewarded for long diagonals
-  - Rooks are rewarded for open files
-  - Queens are rewarded for flexible central positions
-  - Kings are penalised for exposed positions in the middlegame
+- **Material**: Pawn 100, Knight 320, Bishop 330, Rook 500, Queen 900, King 20,000
+- **Piece-square tables** for positional bonuses (e.g. central knights, advanced pawns)
 
 ### Search
 
-- Minimax recursively evaluates all possible move sequences up to depth 3
-- Alpha-Beta pruning eliminates branches that cannot affect the final result, allowing deeper search in the same time
-- Claude automatically promotes pawns to Queens during AI calculations
-- If no legal move exists, Claude resigns
+- AI promotes to **Queen** automatically in its search and play
+- If no legal move exists, the game ends in a draw by the no-move path in the UI
 
-### Thinking Indicator
+### Thinking indicator
 
-A pulsing golden dot appears on Claude's king square while it is calculating its response move.
+A pulsing dot appears on **Claude’s king** while the engine is calculating.
 
 ---
 
 ## PGN Export
 
-After the game ends, click the **📄 PGN** button to open the PGN popup.
+After the game ends, open **PGN** to view the text and copy it.
 
-### PGN Includes
+### Included tags
 
-- Standard seven-tag roster: Event, Site, Date, White, Black, TimeControl, Result
-- All moves in Standard Algebraic Notation (SAN)
-- **Disambiguation** — when two identical pieces can reach the same square, the file or rank is added (e.g. `Nbd7`, `R1e2`)
-- **Check symbol** `+` after moves that give check
-- **Checkmate symbol** `#` on the final move
-- **Castling** — `O-O` (kingside) and `O-O-O` (queenside)
-- **En passant** — shown as a normal pawn capture
-- **Promotion** — shown with `=` notation (e.g. `e8=Q`)
-- Lines automatically wrapped at 76 characters per PGN standard
-- Game result appended at the end (`1-0`, `0-1`, `1/2-1/2`)
+The exporter writes these headers (no `TimeControl` tag is emitted today):
 
-### Example PGN Output
+- `Event` — `"Claude vs Human"`
+- `Site` — `"claude.ai"`
+- `Date` — game date (`YYYY.MM.DD`)
+- `White` / `Black` — `"Human"` or `"Claude"` depending on your side
+- `Result` — `1-0`, `0-1`, `1/2-1/2`, or `*` while in progress
+
+Move text includes SAN with disambiguation, `+` / `#`, castling (`O-O` / `O-O-O`), captures, and promotion (`=Q`, etc.). Long lines wrap at roughly **78** characters.
+
+### Example PGN output
 
 ```
-[Event "Casual Game vs Claude"]
-[Site "Claude.ai"]
-[Date "2025.04.13"]
+[Event "Claude vs Human"]
+[Site "claude.ai"]
+[Date "2026.04.18"]
 [White "Human"]
 [Black "Claude"]
-[TimeControl "600"]
 [Result "1-0"]
 
 1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6
 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7 1-0
 ```
 
-### Copy to Clipboard
-
-Use the **Copy PGN** button inside the popup to copy the full text. You can then paste it directly into:
-
-- [Lichess.org](https://lichess.org) — Analysis board → Import game
-- [Chess.com](https://chess.com) — Analysis → Load from PGN
-- Any desktop chess GUI (Arena, Scid, ChessBase)
+You can paste PGN into [Lichess](https://lichess.org) or [Chess.com](https://www.chess.com) analysis tools.
 
 ---
 
@@ -285,79 +274,64 @@ Use the **Copy PGN** button inside the popup to copy the full text. You can then
 
 ### Castling
 
-Kingside (`O-O`) and queenside (`O-O-O`) castling are available when:
+Available when king and rook have not moved, squares between are empty, the king is not in check, and the king does not cross or land on attacked squares. Castling rights update when rooks move or are captured.
 
-1. The king and the relevant rook have not previously moved
-2. No pieces stand between the king and rook
-3. The king is not currently in check
-4. The king does not pass through a square attacked by an opponent
-5. The king does not land on a square attacked by an opponent
+### En passant
 
-Castling rights are tracked and updated throughout the game — capturing a rook removes that side's castling right even if the king hasn't moved.
+Allowed only on the move immediately after the opposing pawn’s double push.
 
-### En Passant
+### Pawn promotion
 
-When a pawn advances two squares from its starting rank and lands beside an opponent's pawn, the opponent may capture it as if it had only moved one square — but only immediately on the very next move.
-
-### Pawn Promotion
-
-When a pawn reaches the opposite back rank (rank 8 for White, rank 1 for Black), a promotion modal appears. Choose from:
-
-- ♛ Queen (recommended in most cases)
-- ♜ Rook
-- ♝ Bishop
-- ♞ Knight
-
-Claude automatically promotes to Queen during its AI calculations.
+Human chooses piece in a modal; the AI promotes to Queen.
 
 ---
 
 ## Tech Stack
 
-| Component    | Technology                                         |
-| ------------ | -------------------------------------------------- |
-| Language     | Vanilla JavaScript (ES6+)                          |
-| Styling      | CSS3 with Google Fonts (Playfair Display, DM Sans) |
-| Chess logic  | Custom implementation, zero dependencies           |
-| AI engine    | Minimax + Alpha-Beta pruning, depth 3              |
-| Piece images | Chess.com Neo piece set (CDN)                      |
-| Fonts        | Google Fonts CDN                                   |
-| Build tools  | None — single HTML file                            |
+| Area        | Technology                                               |
+| ----------- | -------------------------------------------------------- |
+| UI          | React 19                                                 |
+| Build       | Vite 8, `@vitejs/plugin-react`                           |
+| Linting     | ESLint 9 + `eslint-plugin-react-hooks`                   |
+| Chess logic | Custom engine modules (no chess library)                 |
+| AI          | Minimax + Alpha-Beta, depth 3                            |
+| Assets      | Chess.com Neo piece images (CDN)                         |
+| Fonts       | Google Fonts (Playfair Display, DM Sans) via `index.css` |
 
 ---
 
 ## Running Locally
 
-No build step is required. The entire game is a single `.html` file.
-
 ```bash
-# Clone or download the file
-git clone https://github.com/your-username/Claude-vs-Human-Chess-Game.git
-
-# Open directly in your browser
-open index.html
-
-# Or serve it with any static server
-npx serve .
-python -m http.server 8080
+cd claude-chess-react
+npm install
+npm run dev
 ```
 
-Works in all modern browsers: Chrome, Firefox, Safari, Edge.
+Then open the URL Vite prints (usually `http://localhost:5173/`).
 
-> **Note:** Piece images are loaded from the Chess.com CDN. An internet connection is required for images to appear. All chess logic runs fully offline.
+```bash
+npm run build    # production build → dist/
+npm run preview  # serve dist/
+npm run lint     # ESLint
+```
+
+Works in current Chrome, Firefox, Safari, and Edge.
+
+> **Note:** Piece images load from the Chess.com CDN; you need a network connection for them to appear. All move generation and AI run in the browser.
 
 ---
 
 ## Known Limitations
 
-| Limitation                | Detail                                                          |
-| ------------------------- | --------------------------------------------------------------- |
-| No 50-move rule           | Draw by 50 moves without a pawn move or capture is not enforced |
-| No threefold repetition   | Draws by repetition are not detected                            |
-| No insufficient material  | Bishop vs King type draws are not auto-detected                 |
-| AI promotes to Queen only | Claude always picks Queen; underpromotion is not used by the AI |
-| AI depth is fixed at 3    | Deeper search would improve strength but increase response time |
-| Single file               | No move history panel or captured pieces display                |
+| Limitation               | Detail                                                    |
+| ------------------------ | --------------------------------------------------------- |
+| No 50-move rule          | Not enforced                                              |
+| No threefold repetition  | Not detected                                              |
+| No insufficient material | Not auto-detected                                         |
+| AI underpromotion        | AI always promotes to Queen                               |
+| Fixed AI depth           | Depth is 3; stronger play would need more depth or tuning |
+| UI                       | No move list or captured-pieces panel                     |
 
 ---
 
@@ -367,4 +341,4 @@ MIT License — free to use, modify, and distribute.
 
 ---
 
-_Built with Claude AI — [claude.ai](https://claude.ai)_
+_Built with Claude — [claude.ai](https://claude.ai)_
