@@ -1,0 +1,44 @@
+.board-wrap {
+  position: relative;
+  display: flex;
+  margin-left: -20px;
+}
+
+.board-wrap .rank-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 0 4px;
+  width: 24px;
+  height: 528px;
+}
+
+.board-wrap .rank-labels span {
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #666;
+}
+
+.board-wrap .file-labels {
+  display: flex;
+  justify-content: space-around;
+  width: 528px;
+  padding: 4px 0;
+  /* margin-left: 0px; */
+}
+
+.board-wrap .file-labels span {
+  width: 66px;
+  text-align: center;
+  font-size: 11px;
+  color: #666;
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 66px);
+  grid-template-rows: repeat(8, 66px);
+}

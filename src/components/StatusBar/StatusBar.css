@@ -1,0 +1,51 @@
+.status-bar {
+  color: #777;
+  text-align: center;
+  font-size: 13px;
+  margin-top: 8px;
+  min-height: 20px;
+}
+
+.game-over {
+  color: #f0d9b5;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 600;
+  margin-top: 10px;
+  font-family: 'Playfair Display', serif;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.reset-btn {
+  padding: 9px 28px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid #3a3530;
+  background: #1a1814;
+  cursor: pointer;
+  font-weight: 500;
+  color: #f0d9b5;
+  transition: all 0.18s;
+}
+
+.reset-btn:hover { background: #f0d9b5; color: #0f0e0c; }
+
+.pgn-btn {
+  padding: 9px 22px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid #c8a96e;
+  background: #1a1814;
+  cursor: pointer;
+  font-weight: 500;
+  color: #c8a96e;
+  transition: all 0.18s;
+}
+
+.pgn-btn:hover { background: #c8a96e; color: #0f0e0c; }

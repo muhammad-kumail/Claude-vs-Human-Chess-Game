@@ -1,0 +1,67 @@
+.square {
+  width: 66px;
+  height: 66px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.square.light { background: #f0d9b5; }
+.square.dark  { background: #b58863; }
+
+.square.sq-from,
+.square.sq-to { background: rgba(186, 203, 73, 1) !important; }
+
+.square.selected {
+  outline: 3px solid rgba(30, 120, 240, 0.9);
+  outline-offset: -3px;
+}
+
+.square.in-check { background: #d94040 !important; }
+
+.square.highlight::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  position: absolute;
+  pointer-events: none;
+}
+
+.square.capture::after {
+  content: '';
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  position: absolute;
+  pointer-events: none;
+}
+
+.square img {
+  width: 50px;
+  height: 50px;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.thinking-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c8a96e;
+  animation: pulse 1s infinite;
+  z-index: 2;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
