@@ -222,7 +222,17 @@ export function useChessGame() {
       setBoard(nb);
       setCastlingRights(nextCR);
       setLastMove(nextLM);
-      setLastMoveSq({ fr, fc, tr: mv.r, tc: mv.c });
+      setLastMoveSq({
+        fr,
+        fc,
+        tr: mv.r,
+        tc: mv.c,
+        rook: mv.castleKS
+          ? { fr: mv.r, fc: 7, tr: mv.r, tc: 5 }
+          : mv.castleQS
+            ? { fr: mv.r, fc: 0, tr: mv.r, tc: 3 }
+            : null,
+      });
       setSelected(null);
       setLegalMoves([]);
       setPgnMoves((prev) => [...prev, recordSAN]);

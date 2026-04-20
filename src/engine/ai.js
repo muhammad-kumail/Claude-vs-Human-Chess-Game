@@ -78,3 +78,12 @@ export function minimax(b, depth, alpha, beta, maximizing, whitePerspective, cr,
   }
   return { score: best, move: bestMove };
 }
+
+/*
+ * ai.js — Position evaluation and best-move search for the computer player.
+ *
+ * Scores a board with material plus piece-square tables from the side to
+ * move’s perspective, then runs minimax with alpha-beta pruning to a fixed
+ * depth, applying child moves (auto-queen promotion in search) and returning
+ * the chosen root move.
+ */

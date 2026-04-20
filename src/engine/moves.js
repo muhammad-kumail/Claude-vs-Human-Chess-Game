@@ -110,3 +110,11 @@ export function rawMoves(b, r, c, lastMove) {
   if (t === 'k') return rawKing(b, r, c);
   return [];
 }
+
+/*
+ * moves.js — Pseudo-legal move generation (ignores check).
+ *
+ * Builds candidate destinations per piece type: pawns (push, double, capture,
+ * en passant using lastMove), knights, sliding pieces, king steps, and
+ * rawMoves() dispatch. Legal filtering and castling live in rules.js.
+ */

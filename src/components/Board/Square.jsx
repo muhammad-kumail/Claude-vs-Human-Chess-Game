@@ -5,6 +5,7 @@ export default function Square({
   r,
   c,
   piece,
+  hidePiece,
   isLight,
   isFrom,
   isTo,
@@ -26,7 +27,7 @@ export default function Square({
   return (
     <div className={classes.join(' ')} onClick={() => onClick(r, c)}>
       {showThinkingDot && <div className="thinking-dot" />}
-      {piece && <img src={PIECE_IMAGES[piece]} alt={piece} />}
+      {!hidePiece && piece && <img src={PIECE_IMAGES[piece]} alt={piece} />}
     </div>
   );
 }

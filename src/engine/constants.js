@@ -72,3 +72,11 @@ export const TIME_CONTROLS = [
   { secs: 300, label: '5 min', tag: 'Blitz' },
   { secs: 600, label: '10 min', tag: 'Rapid', accent: true },
 ];
+
+/*
+ * constants.js — Shared static data for the chess engine and UI.
+ *
+ * Holds piece image URLs, the starting 8×8 board, file letters for SAN,
+ * material values and piece-square tables for AI evaluation, and the
+ * selectable clock presets shown in the time-control modal.
+ */

@@ -10,11 +10,11 @@ export const inBounds = (r, c) => r >= 0 && r < 8 && c >= 0 && c < 8;
 export const formatTime = (s) => {
   const m = Math.floor(s / 60);
   const ss = s % 60;
-  return String(m).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
+  return String(m).padStart(2, "0") + ":" + String(ss).padStart(2, "0");
 };
 
 export const findKing = (b, white) => {
-  const k = white ? 'K' : 'k';
+  const k = white ? "K" : "k";
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
       if (b[r][c] === k) return { r, c };
@@ -22,3 +22,10 @@ export const findKing = (b, white) => {
   }
   return null;
 };
+
+/*
+ * utils.js — Small helpers used across engine, AI, and UI.
+ *
+ * Board cloning, piece color checks, square bounds, clock display formatting,
+ * and king lookup for check / attack logic.
+ */

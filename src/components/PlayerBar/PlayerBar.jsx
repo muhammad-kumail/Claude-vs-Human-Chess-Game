@@ -10,22 +10,25 @@ export default function PlayerBar({
   active,
   idle,
 }) {
-  const classes = ['player-bar'];
-  if (idle) classes.push('idle');
+  const timeClasses = ['player-time-bar'];
+  if (idle) timeClasses.push('idle');
   else if (active) {
-    if (time <= 0) classes.push('out');
-    else if (time <= 10) classes.push('low');
-    else classes.push('active');
-  } else classes.push('idle');
+    if (time <= 0) timeClasses.push('out');
+    else if (time <= 10) timeClasses.push('low');
+    else timeClasses.push('active');
+  } else timeClasses.push('idle');
 
   return (
     <div className={`players ${position}`}>
-      <div className={classes.join(' ')}>
+      <div className="player-detail-bar">
         <div className="player-avatar">{avatar}</div>
         <div className="player-info">
           <div className="player-name">{name}</div>
           <div className="player-label">{label}</div>
         </div>
+      </div>
+
+      <div className={timeClasses.join(' ')}>
         <div className="player-time">{formatTime(time)}</div>
       </div>
     </div>

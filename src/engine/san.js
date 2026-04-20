@@ -116,3 +116,12 @@ export function buildPGN({
   pgn += result + ' ' + gameResult;
   return pgn;
 }
+
+/*
+ * san.js — Standard Algebraic Notation and PGN text.
+ *
+ * Builds SAN strings for moves (including disambiguation, captures, castling,
+ * promotion, and + / # after applying the move), a helper to assemble SAN
+ * for a single committed move from the live board, and buildPGN() to format
+ * headers plus wrapped movetext for export / clipboard.
+ */

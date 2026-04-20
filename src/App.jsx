@@ -1,5 +1,6 @@
 import { useChessGame } from './hooks/useChessGame';
 import Board from './components/Board/Board';
+import MoveList from './components/MoveList/MoveList';
 import PlayerBar from './components/PlayerBar/PlayerBar';
 import StatusBar from './components/StatusBar/StatusBar';
 import TimeModal from './components/Modals/TimeModal';
@@ -37,37 +38,42 @@ export default function App() {
 
   return (
     <>
-      <PlayerBar
-        position="top"
-        avatar="🤖"
-        name="Claude"
-        label={claudeLabel}
-        time={claudeTime}
-        active={claudeActive}
-        idle={barsIdle}
-      />
+      <div className="main-row">
+        <div className="board-col">
+          <PlayerBar
+            position="top"
+            avatar="🤖"
+            name="Claude"
+            label={claudeLabel}
+            time={claudeTime}
+            active={claudeActive}
+            idle={barsIdle}
+          />
 
-      <Board
-        board={game.board}
-        turn={game.turn}
-        flipped={game.flipped}
-        selected={game.selected}
-        legalMoves={game.legalMoves}
-        lastMoveSq={game.lastMoveSq}
-        aiThinking={game.aiThinking}
-        aiColor={game.aiColor}
-        onSquareClick={game.onSquareClick}
-      />
+          <Board
+            board={game.board}
+            turn={game.turn}
+            flipped={game.flipped}
+            selected={game.selected}
+            legalMoves={game.legalMoves}
+            lastMoveSq={game.lastMoveSq}
+            aiThinking={game.aiThinking}
+            aiColor={game.aiColor}
+            onSquareClick={game.onSquareClick}
+          />
 
-      <PlayerBar
-        position="bottom"
-        avatar="👤"
-        name="You"
-        label={youLabel}
-        time={youTime}
-        active={youActive}
-        idle={barsIdle}
-      />
+          <PlayerBar
+            position="bottom"
+            avatar="👤"
+            name="You"
+            label={youLabel}
+            time={youTime}
+            active={youActive}
+            idle={barsIdle}
+          />
+        </div>
+        <MoveList pgnMoves={game.pgnMoves} />
+      </div>
 
       <StatusBar
         statusMessage={game.statusMessage}

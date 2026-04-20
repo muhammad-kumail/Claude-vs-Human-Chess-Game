@@ -161,3 +161,13 @@ export function updateCastlingRights(board, fr, fc, tr, tc, cr) {
   if (tr === 0 && tc === 0) ncr.bQ = false;
   return ncr;
 }
+
+/*
+ * rules.js — Chess rules on top of raw moves.
+ *
+ * Attack detection, in-check, double-check counting, applying moves to a
+ * cloned board (including castling and en passant), filtering moves that
+ * leave the king in check, castling as extra king moves, full legal move
+ * lists, “any legal move?” for mate/stalemate, and castling-right updates
+ * after moves.
+ */
