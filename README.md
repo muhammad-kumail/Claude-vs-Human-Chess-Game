@@ -4,6 +4,12 @@ A fully playable, browser-based chess game where you challenge **Claude** (the b
 
 ---
 
+##Screenshot
+
+<img width="1196" height="711" alt="Screenshot 2026-04-20 at 1 48 18 PM" src="https://github.com/user-attachments/assets/110756e8-9832-4128-953d-7cfbf290cc2e" />
+
+---
+
 ## Table of Contents
 
 - [Overview](#overview)
