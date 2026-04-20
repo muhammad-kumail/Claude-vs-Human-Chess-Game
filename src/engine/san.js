@@ -18,24 +18,29 @@ export function toSAN(b, fr, fc, mv, isCapture, promoteTo, castlingRights, lastM
     if (promoteTo) san += '=' + promoteTo.toUpperCase();
   } else {
     const pChar = piece.toUpperCase();
-    let ambigFile = false;
-    let ambigRank = false;
+    // SAN disambiguation:
+    // - If another same-type piece can also reach destination:
+    //   - if they differ by file, include origin file
+    //   - else include origin rank
+    //   - if both needed, include file+rank
+    let needFile = false;
+    let needRank = false;
     for (let rr = 0; rr < 8; rr++) {
       for (let cc = 0; cc < 8; cc++) {
         if (rr === fr && cc === fc) continue;
         if (b[rr][cc] !== piece) continue;
         const mvs = getLegalMoves(b, rr, cc, castlingRights, lastMove);
         if (mvs.some((m) => m.r === mv.r && m.c === mv.c)) {
-          if (cc === fc) ambigRank = true;
-          else ambigFile = true;
+          if (cc !== fc) needFile = true;
+          if (rr !== fr) needRank = true;
         }
       }
     }
     san = pChar;
-    if (ambigFile || ambigRank) {
-      if (ambigFile && ambigRank) san += FILES[fc] + String(8 - fr);
-      else if (ambigFile) san += String(8 - fr);
-      else san += FILES[fc];
+    if (needFile || needRank) {
+      if (needFile && needRank) san += FILES[fc] + String(8 - fr);
+      else if (needFile) san += FILES[fc];
+      else san += String(8 - fr);
     }
     if (isCapture) san += 'x';
     san += destFile + destRank;
